@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusiVive</title>
+</head>
+<body>
+  <style>
+    .related-a{
+      text-decoration: none;
+      color: white;
+    }
+  </style>
+  
+
+
+    <div class="contentHead">
+        <h4>Our Recommendations:</h4>
+        <br>
+
+      <div>
+        <div  style="min-width: max-content;">
+          <% const rec=[8,2,6,0,11,9] %>
+          <!-- Repeat this card as needed -->
+           <%rec.forEach(index =>{%>
+            <a href="/song/<%=songs[index]._id%>" class="related-a">
+           <div style="display: flex; align-items: center;">
+                <img src="<%=songs[index].coverUrl%>" width="75px" height="85px">
+                <div style="margin-left: 10px; margin-top: 10px; ">
+                <h5><%=songs[index].title%></h5>
+                  <h6><%=songs[index].artist%><h6>
+                </div>
+            </div>
+            </a>
+            <br>
+           <%})%>
+          
+       
+           
+          </a>
+           </div>
+
+           
+
+          
+        </div>
+      </div>
+
+    
+</body>
+</html>
+
+
+
+
+
+
+
+
+<!--             -->

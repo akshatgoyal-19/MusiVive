@@ -1,0 +1,240 @@
+body{
+    background-color: black;
+}
+
+.my-navbar{
+    background-color: black !important;
+    border-bottom-color: white !important;
+    
+}
+
+.navbar-toggler {
+    border-color: white !important;
+  }
+
+.navItem{
+    color:white !important;
+    
+}
+
+.left-sidee{
+    background-color: green !important;
+    display: flex;
+    border: 0px 55px 75px 10px !important;
+}
+
+.contentContainer{
+    margin-top: 22px ;
+    margin-left: 10px;
+}
+
+.card a{
+    text-decoration: none;
+}
+
+.contentCardd{
+    margin-top: 10px;
+    width: 10rem; 
+    text-decoration: none; 
+    color: inherit; 
+    background-color: #121212; 
+    border-color: #121212;
+    margin-bottom: 10px;
+}
+
+.card-scroll-wrapper::-webkit-scrollbar {
+  display: none;
+}
+.card-scroll-wrapper {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+#progress-bar {
+  width: 200px;
+  height: 4px;
+  appearance: none;
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+}
+
+
+/* Chrome/Safari - thumb */
+#progress-bar::-webkit-slider-thumb {
+  appearance: none;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  border: none;
+  margin-top: -4px; /* centers the thumb vertically */
+}
+
+/* Firefox - thumb */
+#progress-bar::-moz-range-thumb {
+  height: 12px;
+  width: 12px;
+  border: none;
+  border-radius: 50%;
+}
+
+/* Firefox - track */
+#progress-bar::-moz-range-track {
+  border-radius: 10px;
+  height: 5px;
+}
+
+/* Chrome/Safari - fill before thumb (optional white fill effect) */
+#progress-bar::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 10px;
+}
+
+/* Ensure fixed sidebar width */
+.sidebar-left {
+  width: 350px;
+  flex-shrink: 0;
+  /* background-color: #121212; */
+  border-radius: 17px;
+  overflow-y: auto;
+}
+
+/* Center section should not shift left */
+.main-content {
+  flex-grow: 1;
+  /* background-color: #121212; */
+  border-radius: 17px;
+  overflow-y: auto;
+  overflow-x: hidden; /* prevent side shift */
+  margin: 0 5px;
+}
+
+/* Song cards container (grid) */
+.song-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+}
+
+
+.add-to-play-plus{
+  opacity: 0.8;
+}
+
+.add-to-play-plus:hover{
+  opacity: 1;
+}
+
+.playlist-song{
+  height: 88px;
+  padding-left: 10px;
+}
+.playlist-song:hover{
+  background-color: rgb(70, 69, 69);
+
+}
+
+
+
+/* right click del playlist */
+
+.custom-context-menu {
+  position: absolute;
+  background-color: #282828;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 5px 0;
+  width: 150px;
+  display: none;
+  z-index: 9999;
+}
+.custom-context-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.custom-context-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.custom-context-menu li:hover {
+  background-color: #444;
+}
+
+
+.create-playlist-logo{
+  opacity: 0.8;
+}
+.create-playlist-logo:hover{
+  opacity: 1;
+  cursor: pointer;
+}
+
+
+
+/* === Search Result Card Styles === */
+/* 🔧 Make card fill column & stay equal height */
+.search-result-card {
+  min-height: 340px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.search-result-card:hover {
+  transform: scale(1.02);
+}
+
+.search-result-card img {
+  height: 150px;
+  object-fit: cover;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.search-result-card .card-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.search-result-card .card-title,
+.search-result-card .card-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#right-sidebar {
+  width: 350px;
+  min-width: 350px;
+  max-width: 350px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden; /* prevents sideways scroll */
+}
+
+.search-result-card {
+  height: 340px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 12px;
+  background-color: #1a1a1a;
+  transition: transform 0.2s ease;
+}
+.search-result-card:hover {
+  transform: scale(1.02);
+}
+.search-result-card img {
+  height: 150px;
+  object-fit: cover;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+

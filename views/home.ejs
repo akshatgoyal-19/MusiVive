@@ -1,0 +1,72 @@
+<% layout("layouts/boilerplate") %>
+
+
+
+<div class="contentHead">
+  <h4><b>Latest Songs</b></h4>
+  <div class="card-scroll-wrapper overflow-auto">
+    <div class="d-flex flex-row gap-3" style="min-width: max-content;">
+      <!-- Song Card -->
+       <% const trendingSongs=[5,10,12,0,15,9] %>
+       <% trendingSongs.forEach(index => { %>
+        <a href="/song/<%= songs[index]._id %>" class="card text-white contentCardd">
+        <img src="<%=songs[index].coverUrl%>" class="card-img-top" alt="" width="350px" height="170px">
+        <div class="card-body">
+          <h5 class="card-title"><%=songs[index].title%></h5>
+          <p class="card-text"><%=songs[index].artist%></p>
+        </div>
+      </a>
+      <% }); %>
+    </div>
+  </div>
+
+  <h4><b>Best of English</b></h4>
+  <div class="card-scroll-wrapper overflow-auto">
+    <div class="d-flex flex-row gap-3" style="min-width: max-content;">
+      <!-- Song Card -->
+       <% songs.slice(0,6).forEach(song => { %>
+        <a href="/song/<%= song._id %>" class="card text-white contentCardd">
+        <img src="<%=song.coverUrl%>" class="card-img-top" alt="" width="350px" height="170px">
+        <div class="card-body">
+          <h5 class="card-title"><%=song.title%></h5>
+          <p class="card-text"><%=song.artist%></p>
+        </div>
+      </a>
+      <% }); %>
+    </div>
+  </div>
+
+  <h4><b>Evergreen Hindi Hits</b></h4>
+  <div class="card-scroll-wrapper overflow-auto">
+    <div class="d-flex flex-row gap-3" style="min-width: max-content;">
+      <!-- Song Card -->
+       <% songs.slice(6,12).forEach(song => { %>
+        <a href="/song/<%= song._id %>" class="card text-white contentCardd">
+        <img src="<%=song.coverUrl%>" class="card-img-top" alt="" width="350px" height="170px">
+        <div class="card-body">
+          <h5 class="card-title"><%=song.title%></h5>
+          <p class="card-text"><%=song.artist%></p>
+        </div>
+      </a>
+      <% }); %>
+    </div>
+  </div>
+
+   <h4><b>Soulful Punjabi</b></h4>
+  <div class="card-scroll-wrapper overflow-auto">
+    <div class="d-flex flex-row gap-3" style="min-width: max-content;">
+      <!-- Song Card -->
+       <% songs.slice(12,18).forEach(song => { %>
+        <a href="/song/<%= song._id %>" class="card text-white contentCardd">
+        <img src="<%=song.coverUrl%>" class="card-img-top" alt="" width="350px" height="170px">
+        <div class="card-body">
+          <h5 class="card-title"><%=song.title%></h5>
+          <p class="card-text"><%=song.artist%></p>
+        </div>
+      </a>
+      <% }); %>
+    </div>
+  </div>
+
+
+</div>

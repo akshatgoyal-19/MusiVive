@@ -1,0 +1,90 @@
+<% layout("layouts/boilerplate") %>
+
+<div data-show-right-sidebar="true"></div>
+<% block("rightSidebar").append(include("related.ejs", { relatedSongs: relatedSongs || [] })) %>
+
+<div class="position-relative overflow-hidden" style="border-radius: 12px; margin-top: -15px; margin-left: -15px; margin-right: -15px;">
+  <!-- 🌫️ Blurred Background -->
+  <img src="<%= song.coverUrl %>" 
+       class="position-absolute top-0 start-0 w-100 h-100"
+       style="object-fit: cover; filter: blur(30px) brightness(0.5); z-index: 0;" />
+
+  <!-- 🎧 Foreground Content -->
+  <div class="position-relative z-1 text-white" style="padding: 20px;">
+    <!-- Your existing song info section -->
+    <div class="d-flex">
+      <img src="<%= song.coverUrl %>" width="275px" height="350px" style="border-radius: 10px; object-fit: cover;" />
+      <div style="margin-left: 20px; margin-top: 10px;">
+        <h1><%= song.title %></h1>
+        <h4><%= song.artist || "Unknown Artist" %></h4>
+        <br />
+        <h5><%= song.year || "Unknown Year" %></h5>
+        <br /><br /><br /><br />
+
+        <!-- Play button -->
+        <i id="card-play-btn" class="fa-regular fa-circle-play"
+           style="font-size: 60px; cursor: pointer;"
+           data-song-url="<%= song.audioUrl %>"
+           data-cover-url="<%= song.coverUrl %>"
+           data-title="<%= song.title.replace(/"/g, '&quot;') %>"
+           data-artist="<%= song.artist.replace(/"/g, '&quot;') %>"></i>
+
+        <% if (currentUser) { %>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <i class="fa-regular fa-square-plus" id="add-to-playlist-btn"
+             style="font-size: 40px; cursor: pointer;"
+             data-bs-toggle="modal"
+             data-bs-target="#addToPlaylistModal"></i>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<% if (currentUser) { %>
+  <div class="modal fade" id="addToPlaylistModal" tabindex="-1" aria-labelledby="addToPlaylistModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-white">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Add Song to Playlist</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="add-to-playlist-form" data-song-id="<%= song._id %>">
+            <div class="mb-3">
+              <label for="playlistSelect" class="form-label fw-semibold">Choose Playlist</label>
+              <select class="form-control" id="playlistSelect" required>
+                <% userPlaylist.forEach(playlist => { %>
+                  <option value="<%= playlist._id %>"><%= playlist.name %></option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-outline-light px-4">Add to Playlist</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
+
+<div id="lyrics-box"
+     data-lyrics="<%- JSON.stringify(song.lyrics || []).replace(/"/g, '&quot;') %>"
+     data-lyrics-color="<%= song.lyricsColor || '#00d9ff' %>"
+     class="mt-4 p-3"
+     style="max-height: 250px; overflow-y: auto;
+            background-color: <%= song.lyricsBgColor || '#1e1e1e' %>;
+            border-radius: 10px; margin-left:-15px; margin-right:-15px;">
+  <ul id="lyrics-lines" class="list-unstyled mb-0"></ul>
+</div>
+
+
+<script>
+  window.currentPageSongId = "<%= song._id %>";
+  window.songLyrics = <%- JSON.stringify(song.lyrics || []) %>;
+  window.lyricsHighlightColor = "<%= song.lyricsColor || '#00d9ff' %>";
+</script>
+
+<% block('scripts').append(include("addplaylistscript.ejs")) %>

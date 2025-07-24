@@ -1,0 +1,42 @@
+<script>
+  function attachRemoveFromPlaylistHandler() {
+    document.querySelectorAll(".remove-from-playlist-btn").forEach(button => {
+      button.addEventListener("click", async () => {
+        const songId = button.dataset.songId;
+        const playlistId = button.dataset.playlistId;
+
+        try {
+          const res = await fetch(`/${playlistId}/remove-song/${songId}`, {
+            method: "DELETE",
+          });
+
+          if (res.ok) {
+            showToast("✅ Song removed");
+            const songDiv = button.closest(".d-flex.align-items-center.justify-content-between.p-2");
+            if (songDiv) songDiv.remove();
+          } else {
+            showToast("⚠️ Failed to remove");
+          }
+        } catch (err) {
+          console.error(err);
+          showToast("⚠️ Error removing song");
+        }
+
+        if (typeof attachAllHandlers === "function") attachAllHandlers();
+      });
+    });
+  }
+
+  function reinitializeBootstrapDropdowns() {
+    const dropdownTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="dropdown"]'));
+    dropdownTriggerList.map(el => new bootstrap.Dropdown(el));
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    attachRemoveFromPlaylistHandler();
+    reinitializeBootstrapDropdowns();
+  });
+
+  window.attachRemoveFromPlaylistHandler = attachRemoveFromPlaylistHandler;
+  window.reinitializeBootstrapDropdowns = reinitializeBootstrapDropdowns;
+</script>

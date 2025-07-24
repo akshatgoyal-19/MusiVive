@@ -1,0 +1,68 @@
+<% layout("layouts/boilerplate") %>
+
+<div data-show-right-sidebar="true"></div>
+<% block("rightSidebar").append(include("related2.ejs", { songs,songs })) %>
+
+<div class="playlist-header position-relative overflow-hidden rounded"
+     style="margin: -18px -20px 0 -20px; padding: 40px 30px; gap: 25px;">
+  
+  <!-- 🌫️ Blurred Background -->
+  <% if (playlist.songs.length > 0) { %>
+    <img id="playlist-bg-blur" src="<%= playlist.songs[0].coverUrl %>"
+         class="position-absolute top-0 start-0 w-100 h-100"
+         style="object-fit: cover; filter: blur(25px) brightness(0.5); z-index: 1;" />
+  <% } else { %>
+    <img id="playlist-bg-blur" src="/playlist_logo.png"
+         class="position-absolute top-0 start-0 w-100 h-100"
+         style="object-fit: cover; filter: blur(25px) brightness(0.5); z-index: 1;" />
+  <% } %>
+
+  <!-- 🎧 Foreground Content -->
+  <div class="d-flex align-items-center position-relative text-white" style="z-index: 2;">
+    <% if (playlist.songs.length > 0) { %>
+      <img id="playlist-cover-img" src="<%= playlist.songs[0].coverUrl %>"
+           width="180px" height="180px"
+           style="border-radius: 10px; object-fit: cover;" />
+    <% } else { %>
+      <img  id="playlist-cover-img" src="/playlist_logo.png"
+           width="160px" height="160px"
+           style="border-radius: 10px;" />
+    <% } %>
+
+    <div class="ms-4">
+      <h1 style="margin: 0; font-size: 72px; font-weight: bold;"><%= playlist.name %></h1>
+      <p class="mt-3" style="font-size: 24px;">Created By <%= currentUser.username %></p>
+    </div>
+  </div>
+</div>
+
+<br>
+
+<% allSongs.forEach(song => { %>
+  <div class="d-flex align-items-center justify-content-between p-2">
+    <a href="/song/<%= song._id %>" class="d-flex align-items-center text-decoration-none text-white" style="flex: 1;">
+      <img src="<%= song.coverUrl %>" width="65px" height="75px" alt="cover">
+      <div class="ms-3">
+        <h5 class="mb-1"><%= song.title %></h5>
+        <h6 class="mb-0 text-secondary"><%= song.artist %></h6>
+      </div>
+    </a>
+
+    <div class="dropdown ms-2">
+      <button class="btn btn-sm text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa-solid fa-ellipsis-vertical"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li>
+          <button class="dropdown-item remove-from-playlist-btn"
+            data-song-id="<%= song._id %>"
+            data-playlist-id="<%= playlist._id %>">
+            Remove from Playlist
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+<% }); %>
+
+<% block('scripts').append(include("manageplaylistcontent.ejs")) %>

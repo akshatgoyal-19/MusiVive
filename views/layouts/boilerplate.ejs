@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MusiVive</title>
+  <link rel="icon" href="/MusiVive.png" type="image/png" />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="/css/boilerplate.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+</head>
+<body>
+<style>
+  .search-result-card .card-title,
+.search-result-card .card-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+ #progress-bar {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 5px;
+  background: linear-gradient(to right, #ffffff 0%, #555 0%);
+  border-radius: 5px;
+  outline: none;
+  width: 100%;
+  transition: background 0.2s linear;
+  cursor: pointer;
+}
+
+/* Hidden thumb by default */
+#progress-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 0;
+  width: 0;
+  background: transparent;
+  border: none;
+}
+
+/* Hover state */
+#progress-bar:hover {
+  background: linear-gradient(to right, #00d9ff 0%, #333 0%);
+}
+
+#progress-bar:hover::-webkit-slider-thumb {
+  height: 12px;
+  width: 12px;
+  background: #ffffff;
+  border-radius: 50%;
+  margin-top: -3.5px;
+  cursor: pointer;
+  box-shadow: 0 0 3px #00d9ff;
+}
+
+
+</style>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg my-navbar" style="height: 8vh;">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <a class="navbar-brand navItem me-3" style="font-size: 20px;" href="/"><img src="/MusiVive_nobg.png" height="40px">&nbsp;&nbsp;</a>
+      <a class="navbar-brand navItem me-3" style="font-size: 20px; margin-left: -16px; margin-top: 10px;" href="/">MusiVive</a>
+      <a class="nav-link navItem" href="/"><i class="fa-solid fa-house bg-dark" style="font-size: 22px;border-radius: 50px;  margin-left: 170px; margin-top: 10px;"></i></a>
+    </div>
+    <form class="d-flex" id="search-form" style="width: 300px; margin-left: -90px;">
+      <input class="form-control me-2" type="search" placeholder="Search songs..." id="search-input">
+      <button class="btn btn-outline-light" type="submit">Search</button>
+    </form>
+    <div class="d-flex align-items-center">
+      <% if (!currentUser) { %>
+        <a class="nav-link navItem me-3 signup-bar" href="/signup">
+          <button type="button" class="btn signup-btn" style="color: white;">Signup</button>
+        </a>
+        <a class="nav-link navItem login-bar" href="/login">
+          <button type="button" class="btn btn-dark">Login</button>
+        </a>
+      <% } else { %>
+        <a class="nav-link navItem login-bar" href="/logout">
+          <button type="button" class="btn btn-dark">Logout</button>
+        </a>
+      <% } %>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Layout Start -->
+<div class="d-flex" style="height: 82vh; overflow-x: hidden;">
+    <!-- Left Sidebar -->
+  <div class="p-3 text-white sidebar-left" style="width: 350px; overflow-y: auto; background-color: #121212; border-radius: 17px;">
+        <% if (!currentUser) { %>
+      <div class="card text-white" style="background-color: rgb(37, 36, 36); border-radius: 10px;">
+        <div class="card-body">
+          <h6 class="card-title">Create your first Playlist</h6>
+          <p class="card-subtitle mt-2 mb-3">Make a collection of songs that make you feel something...</p>
+          <a href="/signup">
+            <button class="btn btn-secondary btn-sm bg-light text-black">Join Now</button>
+          </a>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="d-flex justify-content-between align-items-center">
+        <a href="/" class="text-white text-decoration-none"><h4>Your Collections</h4></a>
+        <a data-bs-toggle="modal" data-bs-target="#playlistModal" class="text-white create-playlist-logo"><i class="fa-solid fa-plus signtoadd"></i></a>
+      </div>
+      <br/>
+      <ul class="list-unstyled">
+        <% if (userPlaylist.length > 0) { %>
+          <% userPlaylist.forEach(playlist => { %>
+            <div class="d-flex align-items-center justify-content-between p-2">
+              <div class="zone" id="zone-<%=playlist._id%>" data-playlist-id="<%=playlist._id%>">
+                <a href="/playlist/<%=playlist._id%>" class="text-white text-decoration-none"><%= playlist.name %></a>
+              </div>
+              <div class="dropdown ms-2">
+                <button class="btn btn-sm text-white" type="button" data-bs-toggle="dropdown">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a href="#" class="dropdown-item delete-playlist-btn" data-playlist-id="<%=playlist._id%>">Delete Playlist</a></li>
+                </ul>
+              </div>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <div class="card text-white" style="background-color: rgb(37, 36, 36); border-radius: 10px;">
+            <div class="card-body">
+              <h6 class="card-title">Create your first playlist</h6>
+              <p class="card-subtitle mt-2 mb-3">Make a collection of songs that make you feel something...</p>
+              <button class="btn btn-secondary btn-sm bg-light text-black" data-bs-toggle="modal" data-bs-target="#playlistModal">Create Playlist</button>
+            </div>
+          </div>
+        <% } %>
+      </ul>
+    <% } %>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-grow-1 text-white p-3" style="overflow-y: auto; background-color: #121212; border-radius: 17px; margin: 0 5px;">
+       <div id="main-content"><%- body %></div>
+  </div>
+
+  <!-- Right Sidebar -->
+  <div id="right-sidebar" class="p-3 text-white" style="width: 350px; overflow-y: auto; background-color: #121212; border-radius: 17px; <%= showRightSideBar ? '' : 'display:none;' %>">
+    <%- block('rightSidebar') %>
+  </div>
+</div>
+
+<!-- Footer Music Player -->
+<footer class="bg-black text-white px-3 py-2 d-flex justify-content-between align-items-center"
+        style="height: 100px; position: fixed; bottom: 0; width: 100%; z-index: 1000; border-top: 1px solid #333;">
+  <div class="d-flex align-items-center" style="width: 25%;">
+    <img id="footer-album" src="" height="50" style="border-radius: 5px;">
+    <div class="ms-3">
+      <h6 id="footer-title" class="m-0">No Song</h6>
+      <small id="footer-artist">--</small>
+    </div>
+  </div>
+  <div class="text-center d-flex flex-column align-items-center" style="width: 50%;">
+    <div>
+      <i id="prev-btn" class="fa-solid fa-backward" style="cursor: pointer; margin: 0 10px;"></i>
+      <i id="footer-play-btn" class="fa-regular fa-circle-play" style="font-size: 30px; cursor: pointer;"></i>
+      <i id="next-btn" class="fa-solid fa-forward" style="cursor: pointer; margin: 0 10px;"></i>
+    </div>
+    <div class="d-flex align-items-center justify-content-center mt-2" style="width: 100%;">
+      <small id="current-time">0:00</small>
+      <input type="range" id="progress-bar" min="0" value="0" step="1" style="flex: 1; max-width: 300px; margin: 0 10px;">
+      <small id="total-time">0:00</small>
+    </div>
+  </div>
+  <div class="d-flex justify-content-end align-items-center" style="width: 25%;">
+    <i class="fa-solid fa-volume-high me-2"></i>
+    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1" class="form-range" style="width: 100px;">
+  </div>
+  <audio id="global-audio" src=""></audio>
+</footer>
+
+<!-- Playlist Creation Modal -->
+<div class="modal fade" id="playlistModal" tabindex="-1" aria-labelledby="playlistModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #181818; color: white; border-radius: 15px; border: 1px solid #333;">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold" id="playlistModalLabel">Create a Playlist</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="create-playlist-form">
+          <div class="mb-3">
+            <label for="playlistName" class="form-label fw-semibold">Playlist Name</label>
+            <input type="text" class="form-control" id="playlistName" name="name" required
+                   style="background-color: #282828; color: white; border: 1px solid #444; border-radius: 6px;">
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-outline-light px-4">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS + Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const audio = document.getElementById("global-audio");
+  const footerPlayBtn = document.getElementById("footer-play-btn");
+  const progressBar = document.getElementById("progress-bar");
+  const currentTimeLabel = document.getElementById("current-time");
+  const totalTimeLabel = document.getElementById("total-time");
+  const volumeSlider = document.getElementById("volume-slider");
+  let isPlaying = false;
+
+  function loadAndPlaySong(songUrl, title, artist, albumImage, songId, lyrics, lyricsColor) {
+  const sameSong = audio.src.includes(songUrl);
+  window.currentlyPlayingSongId = songId;
+  window.parsedLyrics = lyrics;
+  window.lyricsHighlightColor = lyricsColor;
+
+  if (sameSong) {
+    isPlaying ? audio.pause() : audio.play();
+    updateIcons(!audio.paused);
+    return;
+  }
+  audio.src = songUrl;
+  document.getElementById("footer-title").innerText = title;
+  document.getElementById("footer-artist").innerText = artist;
+  document.getElementById("footer-album").src = albumImage;
+  audio.play();
+
+  // window.currentlyPlayingSongId = songId;
+  // window.parsedLyrics = lyrics;
+  // window.lyricsHighlightColor = lyricsColor;
+
+  updateIcons(true);
+}
+
+
+  function updateIcons(playing) {
+    const iconClass = playing ? "fa-circle-pause" : "fa-circle-play";
+    document.querySelectorAll("#card-play-btn").forEach(btn => {
+      btn.classList.remove("fa-circle-play", "fa-circle-pause");
+      btn.classList.add(iconClass);
+    });
+    footerPlayBtn.classList.remove("fa-circle-play", "fa-circle-pause");
+    footerPlayBtn.classList.add(iconClass);
+  }
+
+  footerPlayBtn.addEventListener("click", () => {
+    if (!audio.src) return;
+    isPlaying ? audio.pause() : audio.play();
+  });
+
+  audio.addEventListener("play", () => {
+    isPlaying = true;
+    updateIcons(true);
+  });
+
+  audio.addEventListener("pause", () => {
+    isPlaying = false;
+    updateIcons(false);
+  });
+
+  audio.addEventListener("timeupdate", () => {
+  const current = audio.currentTime;
+  const percent = (current / audio.duration) * 100;
+
+  progressBar.value = Math.floor(current);
+  currentTimeLabel.innerText = formatTime(current);
+
+  // Use default colors
+  let fillColor = "#ffffff";
+  let bgColor = "#555";
+  if (progressBar.matches(":hover")) {
+    fillColor = "#00d9ff";
+    bgColor = "#333";
+  }
+
+  // Update progress bar fill
+  progressBar.style.background = `linear-gradient(to right, ${fillColor} ${percent}%, ${bgColor} ${percent}%)`;
+
+  // 🔁 Lyrics Sync
+  if (window.parsedLyrics?.length && window.currentlyPlayingSongId === window.currentPageSongId) {
+    let activeIndex = -1;
+    for (let i = 0; i < parsedLyrics.length; i++) {
+      if (current >= parsedLyrics[i].time) activeIndex = i;
+      else break;
+    }
+
+    parsedLyrics.forEach((_, i) => {
+      const line = document.getElementById(`lyric-${i}`);
+      if (line) {
+        const activeColor = window.lyricsHighlightColor || "#00d9ff";
+
+        const defaultColor = "#aaa";
+        line.style.color = i === activeIndex ? activeColor : defaultColor;
+        if (i === activeIndex) {
+          line.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+    });
+  }
+});
+
+
+  audio.addEventListener("loadedmetadata", () => {
+    progressBar.max = Math.floor(audio.duration);
+    totalTimeLabel.innerText = formatTime(audio.duration);
+  });
+
+  progressBar.addEventListener("input", () => {
+    audio.currentTime = progressBar.value;
+  });
+
+  volumeSlider.addEventListener("input", () => {
+    audio.volume = volumeSlider.value;
+  });
+
+  function formatTime(secs) {
+    const mins = Math.floor(secs / 60);
+    const sec = Math.floor(secs % 60);
+    return `${mins}:${sec < 10 ? "0" : ""}${sec}`;
+  }
+
+  // 🎵 Playlist Handlers
+
+  function attachCardBtn() {
+    document.querySelectorAll("#card-play-btn").forEach(btn => {
+      btn.removeEventListener("click", handleCardPlay);
+      btn.addEventListener("click", handleCardPlay);
+    });
+  }
+
+  function handleCardPlay(e) {
+  const btn = e.currentTarget;
+
+  const songUrl = btn.dataset.songUrl;
+  const title = btn.dataset.title;
+  const artist = btn.dataset.artist;
+  const coverUrl = btn.dataset.coverUrl;
+
+  const songId = window.currentPageSongId || null;
+  const lyrics = window.songLyrics || [];
+  const lyricsColor = window.lyricsHighlightColor || "#00d9ff";
+
+  loadAndPlaySong(songUrl, title, artist, coverUrl, songId, lyrics, lyricsColor);
+}
+
+
+  function attachCreatePlaylistHandler() {
+  const existingForm = document.getElementById("create-playlist-form");
+  if (!existingForm) return;
+
+  // Clone to prevent duplicate event listeners
+  const form = existingForm.cloneNode(true);
+  existingForm.parentNode.replaceChild(form, existingForm);
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault(); // ✅ Prevent double POST
+
+    const nameInput = document.getElementById("playlistName");
+    const name = nameInput.value.trim();
+    if (!name) return;
+
+    try {
+      const res = await fetch("/playlist/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name })
+      });
+
+      const data = await res.json();
+      if (data._id) {
+        showToast("✅ Playlist Created");
+        bootstrap.Modal.getInstance(document.getElementById("playlistModal"))?.hide();
+
+        // Inject into sidebar
+        const sidebarList = document.querySelector(".sidebar-left ul");
+
+        // ✅ Remove the first-playlist card if it exists
+        const card = document.querySelector(".sidebar-left .card");
+        if (card) card.remove();
+
+        const newHTML = `
+          <div class="d-flex align-items-center justify-content-between p-2">
+            <div class="zone" data-playlist-id="${data._id}">
+              <a href="/playlist/${data._id}" class="text-white text-decoration-none">${data.name}</a>
+            </div>
+            <div class="dropdown ms-2">
+              <button class="btn btn-sm text-white" type="button" data-bs-toggle="dropdown">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a href="#" class="dropdown-item delete-playlist-btn" data-playlist-id="${data._id}">Delete Playlist</a>
+                </li>
+              </ul>
+            </div>
+          </div>`;
+        sidebarList.insertAdjacentHTML("beforeend", newHTML);
+        attachDeletePlaylist();
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("⚠️ Playlist creation failed");
+    }
+  });
+}
+
+  function attachDeletePlaylist() {
+  document.querySelectorAll(".delete-playlist-btn").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault(); // ✅ Prevents full page reload
+
+      const id = btn.dataset.playlistId;
+      try {
+        const res = await fetch(`/${id}/deleteplaylist`, { method: "DELETE" });
+        if (res.ok) {
+  showToast("🗑️ Playlist Deleted");
+  const container = btn.closest(".d-flex");
+  container?.remove();
+
+  // ✅ Check if any playlists remain
+  const remainingPlaylists = document.querySelectorAll(".sidebar-left .zone");
+  if (remainingPlaylists.length === 0) {
+    const sidebarList = document.querySelector(".sidebar-left ul");
+    const cardHTML = `
+      <div class="card text-white" style="background-color: rgb(37, 36, 36); border-radius: 10px;">
+        <div class="card-body">
+          <h6 class="card-title">Create your first playlist</h6>
+          <p class="card-subtitle mt-2 mb-3">Make a collection of songs that make you feel something...</p>
+          <button class="btn btn-secondary btn-sm bg-light text-black" data-bs-toggle="modal" data-bs-target="#playlistModal">Create Playlist</button>
+        </div>
+      </div>`;
+      sidebarList.innerHTML = "";
+    sidebarList.insertAdjacentHTML("beforeend", cardHTML);
+  }
+}
+
+      } catch (err) {
+        showToast("⚠️ Failed to delete");
+      }
+    });
+  });
+}
+
+
+  function attachRemoveFromPlaylistHandler() {
+  document.querySelectorAll(".remove-from-playlist-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const playlistId = btn.dataset.playlistId;
+      const songId = btn.dataset.songId;
+
+      try {
+        const res = await fetch(`/${playlistId}/remove-song/${songId}`, {
+          method: "DELETE"
+        });
+
+        if (res.ok) {
+          showToast("✅ Song Removed");
+
+          // Remove from DOM
+          const removedEl = btn.closest(".d-flex");
+          removedEl?.remove();
+
+          // 🔁 Fetch updated playlist songs
+          const playlistRes = await fetch(`/autoimg/playlist/${playlistId}/songs`);
+          const data = await playlistRes.json();
+          const newFirstSong = data.songs[0];
+
+          // Update header images
+          const bgBlur = document.getElementById("playlist-bg-blur");
+          const coverImg = document.getElementById("playlist-cover-img");
+
+          const fallback = "/playlist_logo.png";
+          const imgUrl = newFirstSong?.coverUrl || fallback;
+
+          bgBlur.src = imgUrl;
+          coverImg.src = imgUrl;
+
+          // Optionally adjust cover image size
+          if (newFirstSong) {
+            coverImg.width = 180;
+            coverImg.height = 180;
+          } else {
+            coverImg.width = 160;
+            coverImg.height = 160;
+          }
+
+        }
+      } catch (err) {
+        showToast("⚠️ Failed to remove song");
+      }
+    });
+  });
+}
+
+
+  function attachAddToPlaylistHandler() {
+    const form = document.getElementById("add-to-playlist-form");
+    if (!form) return;
+    const clone = form.cloneNode(true);
+    form.parentNode.replaceChild(clone, form);
+    clone.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const playlistId = document.getElementById("playlistSelect").value;
+      const songId = clone.dataset.songId;
+      try {
+        const res = await fetch(`/song/${songId}/add-to-playlist`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ playlistId })
+        });
+        if (res.ok) {
+          showToast("✅ Added to Playlist");
+          bootstrap.Modal.getInstance(document.getElementById("addToPlaylistModal"))?.hide();
+        }
+      } catch (err) {
+        showToast("⚠️ Couldn’t add song");
+      }
+    });
+  }
+
+  function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "toast text-white align-items-center bg-success border-0 position-fixed bottom-0 end-0 m-3";
+    toast.setAttribute("role", "alert");
+    toast.innerHTML = `
+      <div class="d-flex">
+        <div class="toast-body fw-semibold">${message}</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>`;
+    document.body.appendChild(toast);
+    new bootstrap.Toast(toast).show();
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  function attachAllHandlers() {
+    attachCardBtn();
+    attachCreatePlaylistHandler();
+    attachDeletePlaylist();
+    attachRemoveFromPlaylistHandler();
+    attachAddToPlaylistHandler();
+
+    if (typeof setupLyricsSync === "function") {
+    setTimeout(() => setupLyricsSync(), 300);  // ⏳ Delay fix
+    }
+  }
+
+  // 2. 🔍 Search submit handler
+document.getElementById("search-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const input = document.getElementById("search-input").value.trim();
+  if (!input) return;
+
+  try {
+    const res = await fetch(`/search?q=${encodeURIComponent(input)}`);
+    const data = await res.json();
+    if (data.results && data.results.length > 0) {
+      displaySearchResults(data.results);
+    } else {
+      showToast("No songs found");
+    }
+    document.getElementById("search-input").value = ""; // ✅ Step 4: reset input
+  } catch (err) {
+    console.error("Search failed", err);
+    showToast("Search error");
+  }
+});
+
+// 3. 📋 Render search results inside #main-content
+function displaySearchResults(results) {
+  const container = document.getElementById("main-content");
+
+  if (!results.length) {
+    container.innerHTML = `
+      <div class="text-center mt-5">
+        <h3 class="text-light">No results found</h3>
+        <p class="text-secondary">Try searching by title, artist, genre, or language.</p>
+      </div>`;
+    return;
+  }
+
+let html = `<h3 class="mb-4">Search Results</h3><div class="row g-4">`;
+
+  results.forEach(song => {
+    html += `
+  <div class="col-md-4 col-sm-6 col-12 d-flex">
+    <div class="card search-result-card bg-dark text-white w-100">
+      <img src="${song.coverUrl}" class="card-img-top" alt="cover">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <div>
+          <h5 class="card-title text-truncate">${song.title}</h5>
+          <p class="card-text text-secondary text-truncate">${song.artist}</p>
+        </div>
+        <div>
+          <a href="/song/${song._id}" class="btn btn-outline-light btn-sm mt-3">View Song</a>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+
+  });
+
+  html += `</div>`;
+  container.innerHTML = html;
+  attachAllHandlers();
+}
+
+
+
+  async function playRandomSong() {
+  try {
+    const res = await fetch("/rs/random-song");
+    const song = await res.json();
+    if (song && song.audioUrl) {
+      loadAndPlaySong(song.audioUrl, song.title, song.artist, song.coverUrl);
+    }
+  } catch (err) {
+    console.error("Error fetching random song:", err);
+  }
+}
+
+// ✅ Wire to buttons
+document.getElementById("next-btn").addEventListener("click", playRandomSong);
+document.getElementById("prev-btn").addEventListener("click", playRandomSong);
+
+  // 🔁 AJAX Nav
+  document.addEventListener("DOMContentLoaded", () => {
+    attachAllHandlers();
+
+    if (window.currentPageSongId && document.querySelector("#lyrics-lines")) {
+  setupLyricsSync();  // Ensure lyrics render on full page load
+}
+
+
+    document.body.addEventListener("click", async (e) => {
+      const link = e.target.closest("a");
+      if (!link || !link.href || link.target === "_blank") return;
+      const href = link.getAttribute("href");
+      if (href.startsWith("http") || href === "#" || ["/login", "/logout", "/signup"].includes(href)) return;
+
+      e.preventDefault();
+      const res = await fetch(href);
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, "text/html");
+
+      document.querySelector("#main-content").innerHTML = doc.querySelector("#main-content").innerHTML;
+
+      // ✅ Update songId, lyrics, and color from the new page
+const lyricsBox = doc.querySelector("#lyrics-box");
+if (lyricsBox) {
+  try {
+    window.songLyrics = JSON.parse(lyricsBox.dataset.lyrics || "[]");
+    window.lyricsHighlightColor = lyricsBox.dataset.lyricsColor || "#00d9ff";
+
+    const songIdScript = doc.querySelector("script");
+    if (songIdScript?.textContent.includes("window.currentPageSongId")) {
+      const match = songIdScript.textContent.match(/window\.currentPageSongId\s*=\s*"([^"]+)"/);
+      if (match) {
+        window.currentPageSongId = match[1];
+      }
+    }
+
+    setupLyricsSync();
+  } catch (err) {
+    console.warn("Failed to extract lyrics from AJAX page:", err);
+  }
+}
+
+     // After replacing main-content and right-sidebar...
+      
+
+
+
+
+      document.querySelector("#right-sidebar").innerHTML = doc.querySelector("#right-sidebar").innerHTML;
+      const showSidebar = doc.querySelector("[data-show-right-sidebar]");
+      document.getElementById("right-sidebar").style.display = showSidebar ? "block" : "none";
+
+      history.pushState({}, "", href);
+      attachAllHandlers();
+    });
+
+    window.addEventListener("popstate", () => location.reload());
+  });
+</script>
+
+<script>
+function setupLyricsSync() {
+  const lyrics = window.songLyrics || [];
+  window.parsedLyrics = lyrics;
+
+  const container = document.getElementById("lyrics-lines");
+  if (!container) {
+    console.warn("⚠️ lyrics container not found");
+    return;
+  }
+
+  container.innerHTML = "";
+
+  if (!lyrics.length) {
+    const fallback = document.createElement("li");
+    fallback.textContent = "No lyrics available";
+    fallback.style.color = "#888";
+    container.appendChild(fallback);
+    console.warn("⚠️ No lyrics to render");
+    return;
+  }
+
+  lyrics.forEach((line, i) => {
+    const li = document.createElement("li");
+    li.textContent = line.text;
+    li.dataset.time = line.time;
+    li.id = `lyric-${i}`;
+    li.style.color = "#aaa";
+    li.style.padding = "2px 0";
+    container.appendChild(li);
+  });
+
+  console.log("✅ Lyrics rendered", lyrics);
+}
+</script>
+
+
+<%- block('scripts') %>
+</body>
+</html>

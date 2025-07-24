@@ -1,0 +1,38 @@
+<script>
+  function attachDeletePlaylist() {
+    document.querySelectorAll(".delete-playlist-btn").forEach(button => {
+      button.addEventListener("click", async () => {
+        const playlistId = button.dataset.playlistId;
+        try {
+          const res = await fetch(`/${playlistId}/deleteplaylist`, { method: "DELETE" });
+
+          if (res.ok) {
+            showToast("✅ Playlist removed");
+            const playDiv = button.closest(".d-flex.align-items-center.justify-content-between.p-2");
+            if (playDiv) playDiv.remove();
+          } else {
+            showToast("⚠️ Failed to delete");
+          }
+        } catch (err) {
+          console.error(err);
+          showToast("⚠️ Error deleting playlist");
+        }
+
+        if (typeof attachAllHandlers === "function") attachAllHandlers();
+      });
+    });
+  }
+
+  function reinitializeBootstrapDropdowns() {
+    const dropdownTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="dropdown"]'));
+    dropdownTriggerList.map(el => new bootstrap.Dropdown(el));
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    attachDeletePlaylist();
+    reinitializeBootstrapDropdowns();
+  });
+
+  window.attachDeletePlaylist = attachDeletePlaylist;
+  window.reinitializeBootstrapDropdowns = reinitializeBootstrapDropdowns;
+</script>
