@@ -48,7 +48,7 @@ Think of it as a minimal, elegant and ad-free Spotify alternative – perfect fo
 
 | Homepage | Song Page |
 |---------|-----------|
-| !(<img src="https://iili.io/Fk9S0Je.md.png" alt="Fk9S0Je.md.png" border="0">)| !(<img src="https://iili.io/Fk9gTMl.md.png" alt="Fk9gTMl.md.png" border="0">) |
+| <img src="https://iili.io/Fk9S0Je.md.png" alt="Fk9S0Je.md.png" border="0"> | <img src="https://iili.io/Fk9gTMl.md.png" alt="Fk9gTMl.md.png" border="0"> |
 
 ---
 
