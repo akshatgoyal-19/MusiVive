@@ -91,7 +91,7 @@ nodemon app.js
 ```
 
 Thanks for reading !!<br>
-Made with by [Akshat Goyal](https://github.com/akshatgoyal-19)
+Made by [Akshat Goyal](https://github.com/akshatgoyal-19)
 
 
 
